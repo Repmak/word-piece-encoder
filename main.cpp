@@ -5,7 +5,7 @@
 int main() {
     try {
         nlp::tokenizer::WordPiece tokenizer(
-            "/Users/jkamper/CLionProjects/word-piece-tokenizer/hf_model/tokenizer.json",
+            std::string(PROJECT_ROOT_PATH) + "/hf_model/tokenizer.json",
             "/model/vocab",
             true,
             true,

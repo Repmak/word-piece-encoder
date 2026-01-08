@@ -18,6 +18,8 @@ add_executable(word-piece-tokenizer
         tokenizer/include/WordPiece.h
 )
 
+add_definitions(-DPROJECT_ROOT_PATH="${CMAKE_SOURCE_DIR}")
+
 target_include_directories(word-piece-tokenizer PRIVATE
         tokenizer/include
         ${ICU_INCLUDE_DIRS}

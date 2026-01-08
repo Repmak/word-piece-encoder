@@ -110,7 +110,7 @@ namespace nlp::tokenizer {
     }
 
     void WordPiece::handle_chinese_chars_inplace(std::string& text) const {
-            std::cerr << "Warning: Method handle_chinese_chars not implemented" << std::endl;
+            std::cerr << "Warning: Method handle_chinese_chars is not implemented" << std::endl;
     }
 
 } // namespace nlp::tokenizer
