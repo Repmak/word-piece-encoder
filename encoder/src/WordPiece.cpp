@@ -58,6 +58,12 @@ namespace nlp::encoder {
     // PUBLIC METHODS --------------------------------------------------------------------------------------------------
 
     TokenRole WordPiece::identify_special_token(uint32_t id) const {
+        auto special = vocab_list_->get_special_ids();
+        if (special.padding && id == *special.padding) return TokenRole::Padding;
+        if (special.classification && id == *special.classification) return TokenRole::Classification;
+        if (special.separator && id == *special.separator) return TokenRole::Separator;
+        if (special.unknown && id == *special.unknown) return TokenRole::Unknown;
+        if (special.mask && id == *special.mask) return TokenRole::Mask;
         return TokenRole::None;
     }
 
@@ -82,7 +88,7 @@ namespace nlp::encoder {
             std::cout << std::endl;
         }
 
-        // todo post processing
+        post_processing(all_tokens);
 
         return all_tokens;
     }
@@ -114,10 +120,10 @@ namespace nlp::encoder {
                 i < n &&
                 !std::isspace(static_cast<unsigned char>(text[i])) &&
                 !std::ispunct(static_cast<unsigned char>(text[i]))
-            ) { i++; }
+            ) i++;
+
             words.push_back(text.substr(start, i - start));
         }
-
         return words;
     }
 
@@ -132,7 +138,6 @@ namespace nlp::encoder {
             std::cerr << "Missing special token: Unknown" << std::endl;
             exit(-1);
         }
-        uint32_t unknown_id = special_ids.unknown.value();
 
         while (start < n) {
             size_t end = n;
@@ -155,8 +160,8 @@ namespace nlp::encoder {
 
             // Entire word is unknown if a match cannot be found.
             if (!best_id.has_value()) {
-                return { Token {
-                    unknown_id, std::string(word), 0, word.length(), TokenRole::Unknown
+                return { Token{
+                    special_ids.unknown.value(), std::string(word), 0, word.length(), TokenRole::Unknown
                 } };
             }
 
@@ -165,8 +170,48 @@ namespace nlp::encoder {
             });
             start = end;
         }
-
         return tokens;
+    }
+
+    void WordPiece::post_processing(std::vector<Token>& tokens) const {
+        // Safety check for CLS, SEP, and PAD tokens.
+        auto special_ids = vocab_list_->get_special_ids();
+        if (!special_ids.classification) {
+            std::cerr << "Missing special token: Classification" << std::endl;
+            exit(-1);
+        }
+        if (!special_ids.separator) {
+            std::cerr << "Missing special token: Separator" << std::endl;
+            exit(-1);
+        }
+        if (!special_ids.padding) {
+            std::cerr << "Missing special token: Padding" << std::endl;
+            exit(-1);
+        }
+
+        // Reserve index 0 for [CLS] and index 127 for [SEP].
+        if (tokens.size() > (max_length - 2)) {
+            tokens.resize(max_length - 2);
+            std::cerr << "Warning: Tokens truncated. max_length = 128." << std::endl;
+        }
+
+        tokens.insert(tokens.begin(), Token{
+                special_ids.classification.value(), "[CLS]", 0, 0, TokenRole::Classification
+        });
+
+        tokens.push_back(Token{
+            special_ids.separator.value(), "[SEP]", 0, 0, TokenRole::Separator
+        });
+
+        // Add padding if necessary.
+        if (tokens.size() < max_length) {
+            tokens.reserve(max_length);
+            while (tokens.size() < max_length) {
+                tokens.push_back(Token{
+                    special_ids.padding.value(), "[PAD]", 0, 0, TokenRole::Padding
+                });
+            }
+        }
     }
 
     void WordPiece::clean_text_inplace(std::string& text) const {

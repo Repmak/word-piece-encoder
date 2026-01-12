@@ -21,11 +21,11 @@ namespace nlp::encoder {
                 std::size_t max_length
             );
 
-            [[nodiscard]] const VocabList& get_vocab_list() const { return *vocab_list_; }
-
             [[nodiscard]] std::vector<Token> encode(std::string_view text) const override;
             [[nodiscard]] TokenRole identify_special_token(uint32_t id) const override;
+
             [[nodiscard]] size_t get_vocab_size() const override { return vocab_list_->size(); }
+            [[nodiscard]] const VocabList& get_vocab_list() const { return *vocab_list_; }
 
         private:
             std::unique_ptr<VocabList> vocab_list_;
@@ -40,6 +40,9 @@ namespace nlp::encoder {
 
             // Encode each word into one or more tokens (using MaxMatch algorithm).
             [[nodiscard]] std::vector<Token> encode_word(std::string_view word) const;
+
+            // Truncation and adding special tokens.
+            void post_processing(std::vector<Token>& tokens) const;
 
             // Normalising user input.
             void clean_text_inplace(std::string& text) const;

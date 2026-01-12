@@ -7,6 +7,7 @@
 #include <optional>
 
 namespace nlp::encoder {
+
     enum class TokenRole { None, Padding, Unknown, Classification, Separator, Mask };
 
     struct VocabConfig {
@@ -14,14 +15,14 @@ namespace nlp::encoder {
         std::optional<std::string> unknown = "[UNK]";
         std::optional<std::string> classification = "[CLS]";
         std::optional<std::string> separator = "[SEP]";
-        std::optional<std::string> mask = "[MASK]";
+        std::optional<std::string> mask = "[MASK]";  // Not technically needed. Only used during training to force the model to use context clues to guess what word is behind the mask.
 
-        [[nodiscard]] TokenRole get_special_role(std::string_view token) const {
-            if (padding && token == *padding) return TokenRole::Padding;
-            if (unknown && token == *unknown) return TokenRole::Unknown;
-            if (classification && token == *classification) return TokenRole::Classification;
-            if (separator && token == *separator) return TokenRole::Separator;
-            if (mask && token == *mask) return TokenRole::Mask;
+        [[nodiscard]] TokenRole get_special_role(std::string_view token_text) const {
+            if (padding && token_text == *padding) return TokenRole::Padding;
+            if (unknown && token_text == *unknown) return TokenRole::Unknown;
+            if (classification && token_text == *classification) return TokenRole::Classification;
+            if (separator && token_text == *separator) return TokenRole::Separator;
+            if (mask && token_text == *mask) return TokenRole::Mask;
             return TokenRole::None;
         }
     };
