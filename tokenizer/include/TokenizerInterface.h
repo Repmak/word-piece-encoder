@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <string_view>
@@ -12,6 +13,14 @@ namespace nlp::tokenizer {
         std::string text;        // The original string representation (not strictly needed by the Onnx model).
         int64_t attention_mask;  // 1 for real tokens, 0 for padding.
         int64_t segment_id;      // Defines what sentence the token belongs to.
+
+        friend std::ostream& operator<<(std::ostream& os, const Token& instance) {
+            os << "id: " << instance.id
+            << ", text: \"" << instance.text
+            << "\", attention_mask:" << instance.attention_mask
+            << ", segment: " << instance.segment_id;
+            return os;
+        }
     };
 
     struct BaseConfig {
