@@ -7,7 +7,7 @@
 
 #include "TokenizerInterface.h"
 
-namespace nlp::tokenizer {
+namespace sentencpp::tokenizer {
 
     class BPE : public TokenizerInterface {
         public:
@@ -46,4 +46,4 @@ namespace nlp::tokenizer {
             std::vector<std::string> bpe_merge_word(std::string_view word) const;
     };
 
-} // namespace nlp::tokenizer
+} // namespace sentencpp::tokenizer

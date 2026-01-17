@@ -8,12 +8,12 @@
 
 int main() {
     try {
-        nlp::tokenizer::WordPieceConfig config;
+        sentencpp::tokenizer::WordPieceConfig config;
         // config.config_path = std::string(PROJECT_ROOT_PATH) + "/onnx_models/sentence-transformers-all-mini-lm-l6-v2/tokenizer.json";
         config.vocab_key = "/model/vocab";
         config.config_path = std::string(PROJECT_ROOT_PATH) + "/onnx_models/distilbert-base-uncased/tokenizer.json";
 
-        const nlp::tokenizer::WordPiece tokenizer(config);
+        const sentencpp::tokenizer::WordPiece tokenizer(config);
 
         // std::cout << tokenizer.get_vocab_list() << std::endl;
 
@@ -25,10 +25,10 @@ int main() {
         // for (size_t i = 0; i < tokens.size(); ++i) std::cout << i << ": " << tokens[i] << "\n";
         // for (size_t i = 0; i < tokens.size(); ++i) std::cout << i << ": " << tokens2[i] << "\n";
 
-        nlp::inference::ModelConfig model_config;
+        sentencpp::inference::ModelConfig model_config;
         // model_config.output_name = "logits";
 
-        nlp::inference::OnnxEngine engine(
+        sentencpp::inference::OnnxEngine engine(
             std::string(PROJECT_ROOT_PATH) + "/onnx_models/sentence-transformers-all-mini-lm-l6-v2/model.onnx",
             // std::string(PROJECT_ROOT_PATH) + "/onnx_models/distilbert-base-uncased/model.onnx",
             model_config
@@ -60,10 +60,10 @@ int main() {
         //     std::cout << "] (Dim: " << vec.size() << ")" << std::endl;
         // }
 
-        auto sent_vec_1 = nlp::embedding_utils::VectorMaths::mean_pooling(embeddings, tokens);
-        auto sent_vec_2 = nlp::embedding_utils::VectorMaths::mean_pooling(embeddings2, tokens2);
+        auto sent_vec_1 = sentencpp::embedding_utils::VectorMaths::mean_pooling(embeddings, tokens);
+        auto sent_vec_2 = sentencpp::embedding_utils::VectorMaths::mean_pooling(embeddings2, tokens2);
 
-        float similarity = nlp::embedding_utils::VectorMaths::cosine_similarity(sent_vec_1, sent_vec_2);
+        float similarity = sentencpp::embedding_utils::VectorMaths::cosine_similarity(sent_vec_1, sent_vec_2);
         std::cout << "Similarity Score: " << similarity << std::endl;
 
     } catch (const std::exception& e) {

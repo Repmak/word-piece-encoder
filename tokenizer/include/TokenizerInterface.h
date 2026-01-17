@@ -6,7 +6,7 @@
 #include <string_view>
 #include "VocabList.h"
 
-namespace nlp::tokenizer {
+namespace sentencpp::tokenizer {
 
     struct Token {
         int64_t id;              // The numerical ID according to the model's vocabulary.
@@ -61,4 +61,4 @@ namespace nlp::tokenizer {
             [[nodiscard]] virtual std::vector<Token> tokenize(std::string_view text) const = 0;
     };
 
-} // namespace nlp::tokenizer
+} // namespace sentencpp::tokenizer

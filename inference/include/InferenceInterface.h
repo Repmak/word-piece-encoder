@@ -4,7 +4,7 @@
 #include <onnxruntime_cxx_api.h>
 #include <vector>
 
-namespace nlp::inference {
+namespace sentencpp::inference {
 
     class InferenceInterface {
         public:
@@ -16,4 +16,4 @@ namespace nlp::inference {
             // std::vector<float> run(const std::vector<tokenizer::Token>& tokens);
     };
 
-} // namespace nlp::inference
+} // namespace sentencpp::inference

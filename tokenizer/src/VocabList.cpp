@@ -2,7 +2,7 @@
 #include <iomanip>
 #include "VocabList.h"
 
-namespace nlp::tokenizer {
+namespace sentencpp::tokenizer {
 
     bool VocabList::set_token(const std::string& token_str, const int64_t token_id) {
         // Check the token and id.
@@ -48,4 +48,4 @@ namespace nlp::tokenizer {
         return os;
     }
 
-} // namespace nlp::tokenizer
+} // namespace sentencpp::tokenizer

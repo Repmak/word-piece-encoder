@@ -3,7 +3,7 @@
 #include "OnnxEngine.h"
 
 
-namespace nlp::inference {
+namespace sentencpp::inference {
 
     OnnxEngine::OnnxEngine(
         const std::string& model_path,
@@ -164,4 +164,4 @@ namespace nlp::inference {
     //     return probabilities;
     // }
 
-} // namespace nlp::inference
+} // namespace sentencpp::inference

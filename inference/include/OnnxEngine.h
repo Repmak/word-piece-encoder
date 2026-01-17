@@ -6,7 +6,7 @@
 #include "InferenceInterface.h"
 
 
-namespace nlp::inference {
+namespace sentencpp::inference {
 
     struct ModelConfig {
         std::string input_ids_name = "input_ids";
@@ -32,4 +32,4 @@ namespace nlp::inference {
             std::vector<std::string> output_names;
     };
 
-} // namespace nlp::inference
+} // namespace sentencpp::inference

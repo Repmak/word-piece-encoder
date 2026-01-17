@@ -12,7 +12,7 @@
 
 using json = nlohmann::json;
 
-namespace nlp::tokenizer {
+namespace sentencpp::tokenizer {
 
     WordPiece::WordPiece(const WordPieceConfig& config) :
         config_(config),
@@ -91,7 +91,7 @@ namespace nlp::tokenizer {
 
     // PRIVATE METHODS -------------------------------------------------------------------------------------------------
 
-    std::vector<std::string_view> WordPiece::split_text(std::string_view text) {
+    std::vector<std::string_view> WordPiece::split_text(const std::string_view text) {
         std::vector<std::string_view> words;
         size_t i = 0;
         const size_t n = text.length();
@@ -133,7 +133,7 @@ namespace nlp::tokenizer {
         return words;
     }
 
-    std::vector<Token> WordPiece::encode_word(std::string_view word) const {
+    std::vector<Token> WordPiece::encode_word(const std::string_view word) const {
         std::vector<Token> tokens;
         size_t start = 0;
         const size_t n = word.length();
@@ -247,4 +247,4 @@ namespace nlp::tokenizer {
             std::cerr << "Warning: Method handle_chinese_chars_inplace is not implemented" << std::endl;
     }
 
-} // namespace nlp::tokenizer
+} // namespace sentencpp::tokenizer

@@ -2,7 +2,7 @@
 #include <vector>
 #include <TokenizerInterface.h>
 
-namespace nlp::embedding_utils {
+namespace sentencpp::embedding_utils {
 
     class VectorMaths {
         public:
@@ -19,4 +19,4 @@ namespace nlp::embedding_utils {
             );
     };
 
-} // namespace nlp::embedding_utils
+} // namespace sentencpp::embedding_utils

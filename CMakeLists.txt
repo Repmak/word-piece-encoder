@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(word-piece-encoder LANGUAGES CXX)
+project(sentencpp LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

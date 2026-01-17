@@ -2,7 +2,7 @@
 #include <cmath>
 #include "VectorMaths.h"
 
-namespace nlp::embedding_utils {
+namespace sentencpp::embedding_utils {
 
     std::vector<float> VectorMaths::mean_pooling(
         const std::vector<std::vector<float>>& token_embeddings,
@@ -44,4 +44,4 @@ namespace nlp::embedding_utils {
         return (norm_a == 0 || norm_b == 0) ? 0.0f : dot / (std::sqrt(norm_a) * std::sqrt(norm_b));
     }
 
-} // namespace nlp::embedding_utils
+} // namespace sentencpp::embedding_utils

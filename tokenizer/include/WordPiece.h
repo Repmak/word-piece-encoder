@@ -6,7 +6,7 @@
 #include <iostream>
 #include "TokenizerInterface.h"
 
-namespace nlp::tokenizer {
+namespace sentencpp::tokenizer {
 
     class WordPiece : public TokenizerInterface {
         public:
@@ -37,4 +37,4 @@ namespace nlp::tokenizer {
             static void handle_chinese_chars_inplace(std::string& text);
     };
 
-} // namespace nlp::tokenizer
+} // namespace sentencpp::tokenizer
