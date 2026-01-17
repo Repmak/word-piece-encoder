@@ -1,10 +1,10 @@
-# still thinking of a name for this repo
+# SentenCPP
 
 Still in development!
 
 ## Overview
 
-C++ library for tokenization and embedding extraction. This project enables BERT-based WordPiece tokenization and Onnx inference within C++, replicating the ease of use of Python's `sentence-transformers`.
+SentenCPP is a C++20 library designed to replicate the ease of use of Python's `sentence-transformers`. It provides an end-to-end pipeline from raw text tokenization to vector embeddings optimised for low-latency production environments where applications would otherwise be bottlenecked by Python's interpreter.
 
 
 todo:
