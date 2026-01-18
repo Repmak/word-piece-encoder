@@ -1,19 +1,19 @@
-# SentenCPP
+# sentenCPP
 Still in development! (sorry the content below is also not done yet!)
 
 <br/>
 
 ## 1. Overview
-SentenCPP is a C++20 library designed to replicate the ease of use of the Python library `sentence-transformers`. It provides an end-to-end pipeline from raw text tokenization to vector embeddings optimised for low-latency production environments where applications would otherwise be bottlenecked by Python's interpreter.
+sentenCPP is a C++20 library designed to replicate the ease of use of the Python library `sentence-transformers`. It provides an end-to-end pipeline from raw text tokenization to vector embeddings optimised for low-latency production environments where applications would otherwise be bottlenecked by Python's interpreter.
 
 <br/>
 
 ## 2. Getting Started
-This section will outline all the key details to get SentenCPP working on your machine.
+This section will outline all the key details to get sentenCPP working on your machine.
 
 
 ### 2.1 Model Compatibility
-SentenCPP supports any transformer model that uses WordPiece tokenization and follows the BERT/DistilBERT architecture exported to ONNX. This includes models like `all-MiniLM-L6-v2` and `bert-base-uncased`. Exporting to ONNX can be done using Hugging Face Optimum. It provides a quick and easy way of exporting models to the ONNX format.
+sentenCPP supports any transformer model that uses WordPiece tokenization and follows the BERT/DistilBERT architecture exported to ONNX. This includes models like `all-MiniLM-L6-v2` and `bert-base-uncased`. Exporting to ONNX can be done using Hugging Face Optimum. It provides a quick and easy way of exporting models to the ONNX format.
 
 **Step 1**: Install the following requirements.
 ```bash
@@ -29,7 +29,7 @@ optimum-cli export onnx --model sentence-transformers/all-MiniLM-L6-v2 --task de
 **Step 3**: Finally, your `sentencpp_model/` folder will contain the model (`model.onnx`), as well as various other files determining the model's configuration settings. These will be further addressed in the [**API Reference**](#4-api-reference).
 
 ### 2.2 Configuring ICU4C
-SentenCPP relies on ICU4C for text normalisation. If you already have ICU4C in your system's default library path you may be able to skip the steps below.
+sentenCPP relies on ICU4C for text normalisation. If you already have ICU4C in your system's default library path you may be able to skip the steps below.
 
 **Step 1**: Run the following build, substituting `PATH_TO_ICU` with the appropriate `ICU_ROOT` for your operating system. For example, on macOS (Homebrew), this will be `/opt/homebrew/opt/icu4c`.
 ```bash
@@ -53,7 +53,7 @@ todo
 <br/>
 
 ## 4. API Reference
-SentenCPP is organised into three primary namespaces to handle the following distinct stages: 
+sentenCPP is organised into three primary namespaces to handle the following distinct stages: 
 - [**4.1 Tokenizer**](#41-sentencpptokenizer)
 - [**4.2 Inference**](#42-sentencppinference)
 - [**4.3 Embedding Utils**](#43-sentencppembedding_utils)
