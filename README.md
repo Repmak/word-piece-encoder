@@ -15,32 +15,32 @@ This section will outline all the key details to get SentenCPP working on your m
 ### 2.1 Model Compatibility
 SentenCPP supports any transformer model that uses WordPiece tokenization and follows the BERT/DistilBERT architecture exported to ONNX. This includes models like `all-MiniLM-L6-v2` and `bert-base-uncased`. Exporting to ONNX can be done using Hugging Face Optimum. It provides a quick and easy way of exporting models to the ONNX format.
 
-**Step 1:** Install the following requirements.
+**Step 1**: Install the following requirements.
 ```bash
 pip install "optimum[exporters]"
 pip install "optimum[onnxruntime]"
 ```
-    
-**Step 2:** Run the export, substituting `all-MiniLM-L6-v2` for a model of your choice.
+
+**Step 2**: Run the export, substituting `all-MiniLM-L6-v2` for a model of your choice.
 ```bash
 optimum-cli export onnx --model sentence-transformers/all-MiniLM-L6-v2 --task default sentencpp_model/
 ```
 
-**Step 3:** Finally, your `sentencpp_model/` folder will contain the model (`model.onnx`), as well as various other files determining the model's configuration settings. These will be further addressed in section 3.
+**Step 3**: Finally, your `sentencpp_model/` folder will contain the model (`model.onnx`), as well as various other files determining the model's configuration settings. These will be further addressed in the [**API Reference**](#4-api-reference).
 
 ### 2.2 Configuring ICU4C
 SentenCPP relies on ICU4C for text normalisation. If you already have ICU4C in your system's default library path you may be able to skip the steps below.
 
-**Step 1:** Run the following build, substituting `PATH_TO_ICU` with the appropriate `ICU_ROOT` for your operating system. For example, on macOS (Homebrew), this will be `/opt/homebrew/opt/icu4c`.
+**Step 1**: Run the following build, substituting `PATH_TO_ICU` with the appropriate `ICU_ROOT` for your operating system. For example, on macOS (Homebrew), this will be `/opt/homebrew/opt/icu4c`.
 ```bash
 mkdir build && cd build
 cmake .. -DICU_ROOT=<PATH_TO_ICU>  # Substitute!
 cmake --build .
 ```
 
-**Step 2:** Within CLion, navigate to `Settings` > `Build, Execution, Deployment` > `CMake`.
+**Step 2**: Within CLion, navigate to `Settings` > `Build, Execution, Deployment` > `CMake`.
 
-**Step 3:** Set the `CMake Options` field to `-DICU_ROOT=/opt/homebrew/opt/icu4c`.
+**Step 3**: Set the `CMake Options` field to `-DICU_ROOT=/opt/homebrew/opt/icu4c`.
 
 ### 2.3 Other library dependencies
 todo
@@ -61,6 +61,37 @@ SentenCPP is organised into three primary namespaces to handle the following dis
 ### 4.1 `sentencpp::tokenizer`
 This handles the conversion of raw strings into sequences of tokens compatible with transformer models.
 
+#### 4.1.1 `class WordPiece`
+This is a subclass of `TokenizerInterface`. This class performs WordPiece tokenization.
+
+**`WordPiece(const WordPieceConfig& config)`**: Initialises the tokenizer using [4.1.2 WordPieceConfig](#412-struct-wordpiececonfig).
+
+**`std::vector<Token> tokenize(const std::string& text)`**: Normalises the string, converts it into a vector of tokens, and post-processes it.
+
+#### 4.1.2 `struct WordPieceConfig`
+This is a sub-struct of `TokenizerBaseConfig`. The members of this struct determine the behaviour and operations of the WordPiece tokenizer.
+
+**`std::size_t max_input_chars_per_word = 100`**: This value should match your selected model's configuration settings. Sets a limit on the number of characters of a word. A word with length exceeding this limit will automatically be represented as an `UNK` token.
+
+**`std::size_t max_length = 128`**: This value should match your selected model's configuration settings. Sets a limit on the number of tokens for a sequence. Tokens beyond this limit will be truncated. Note that 2 indices are reserved for special tokens; index 0 stores a `CLS` token, adn index 127 stores a `SEP` token.
+
+**`bool to_lowercase = true`**: This value should match your selected model's configuration settings.
+
+**`bool strip_accents = true`**: This value should match your selected model's configuration settings.
+
+**`bool clean_text = true`**: This value should match your selected model's configuration settings.
+
+**`bool handle_chinese_chars = true`**: This value should match your selected model's configuration settings.
+
+**`std::string padding_token = "[PAD]"`**: This value should match your selected model's special token vocabulary.
+
+**`std::string unknown_token = "[UNK]"`**: This value should match your selected model's special token vocabulary.
+
+**`std::string classification_token = "[CLS]"`**: This value should match your selected model's special token vocabulary.
+
+**`std::string separator_token = "[SEP]"`**: This value should match your selected model's special token vocabulary.
+
+**`std::string mask_token = "[MASK]"`**: This value should match your selected model's special token vocabulary.
 
 ### 4.2 `sentencpp::inference`
 This namespace performs the execution of ONNX models through ONNX Runtime.
