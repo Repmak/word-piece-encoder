@@ -1,9 +1,17 @@
 <p align="center"><img width="50%" src="docs/assets/sentencpp-logo.png" /></p>
 <!-- <p align="center"><img width="50%" src="docs/assets/sentencpp-logo-dark.png" /></p> -->
 
-Still in development! (sorry the content below is also not done yet!)
+Still in development!
 
-<br/>
+todo:
+- write up api reference in a separate webpage for better clarity (it is a mess below!)
+- set token segment ids to the correct value depending on use case (segment ids are always set to 0 right now)
+- handle sequences which exceed max token length (use overlap and pass each batch into the onnx model)
+- use prefix trie to avoid o(n^2) of max match algo
+
+todo for much later?
+- implement bpe and unigram tokenizers (for compatibility with other model architectures)
+- support bin/h5 files?
 
 ## 1. Overview
 sentenCPP is a C++20 library designed to replicate the ease of use of the Python library `sentence-transformers`. It provides an end-to-end pipeline from raw text tokenization to vector embeddings optimised for low-latency production environments where applications would otherwise be bottlenecked by Python's interpreter.
@@ -108,14 +116,6 @@ Contains static methods for mathematical operations on vectors.
 ## 5. Suggestions & Feedback
 
 Please feel free to open an issue or reach out!
-
-
-todo:
-- fix token segment ids
-- handle sequences which exceed max token length (use overlap and pass each batch into the onnx model)
-- use prefix trie to avoid o(n^2) of max match algo
-- implement bpe and unigram tokenizers (not necessary for bert though)
-- support bin/h5 files?
 
 done:
 - vocab list class for storing model's vocabulary
