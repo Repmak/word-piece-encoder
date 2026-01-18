@@ -1,4 +1,4 @@
-<p align="center"><img width="50%" src="docs/assets/sentencpp-logo.png" /></p>
+<p align="center"><img width="40%" src="docs/assets/sentencpp-logo.png" /></p>
 <!-- <p align="center"><img width="50%" src="docs/assets/sentencpp-logo-dark.png" /></p> -->
 
 Still in development!
