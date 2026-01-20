@@ -15,7 +15,6 @@ int main() {
         sentencpp::tokenizer::WordPieceConfig config;
         config.config_path = config_path;
         config.vocab_key = "/model/vocab";
-
         const sentencpp::tokenizer::WordPiece tokenizer(config);
 
         // std::cout << tokenizer.get_vocab_list() << std::endl;
@@ -29,35 +28,12 @@ int main() {
         // for (size_t i = 0; i < tokens.size(); ++i) std::cout << i << ": " << tokens2[i] << "\n";
 
         sentencpp::inference::ModelConfig model_config;
-        // model_config.output_name = "logits";
-
-        sentencpp::inference::OnnxEngine engine(model_path, model_config);
+        model_config.model_path = model_path;
+        sentencpp::inference::OnnxEngine engine(model_config);
 
         // Note: It is normal for vector embeddings of padding tokens to not store absolute zeros. Attention mechanism will affect the values.
         std::vector<std::vector<float>> embeddings = engine.encode(tokens);
         std::vector<std::vector<float>> embeddings2 = engine.encode(tokens2);
-
-        // std::cout << "--- Token Embeddings Preview ---" << std::endl;
-        //
-        // for (size_t i = 0; i < tokens.size(); ++i) {
-        //     // Print the token text so we know which vector we're looking at
-        //     std::cout << "Token [" << i << "] (" << tokens[i].text << "): [";
-        //
-        //     const auto& vec = embeddings[i];
-        //     size_t preview_size = 5;
-        //
-        //     // Print first few values
-        //     for (size_t j = 0; j < std::min(vec.size(), preview_size); ++j) {
-        //         printf("% .4f", vec[j]); // Neat formatting with 4 decimal places
-        //         if (j < preview_size - 1) std::cout << ", ";
-        //     }
-        //
-        //     if (vec.size() > preview_size) {
-        //         std::cout << " ... " << vec.back();
-        //     }
-        //
-        //     std::cout << "] (Dim: " << vec.size() << ")" << std::endl;
-        // }
 
         auto sent_vec_1 = sentencpp::embedding_utils::VectorMaths::mean_pooling(embeddings, tokens);
         auto sent_vec_2 = sentencpp::embedding_utils::VectorMaths::mean_pooling(embeddings2, tokens2);

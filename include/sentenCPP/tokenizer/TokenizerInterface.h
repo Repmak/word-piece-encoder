@@ -38,7 +38,7 @@ namespace sentencpp::tokenizer {
 
     struct WordPieceConfig : public TokenizerBaseConfig {
         std::string config_path;  // Path to the config file. Eg: "tokenizer.json".
-        std::string vocab_key;  // Path to the vocabulary object within the config file. Eg: "/model/vocab".
+        std::string vocab_key = "/model/vocab";  // Path to the vocabulary object within the config file. Eg: "/model/vocab".
     };
 
     struct BPEConfig : public TokenizerBaseConfig {

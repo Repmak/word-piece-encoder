@@ -3,12 +3,14 @@
 #include <string>
 #include <vector>
 #include <sentenCPP/tokenizer/TokenizerInterface.h>
+
 #include "InferenceInterface.h"
 
 
 namespace sentencpp::inference {
 
     struct ModelConfig {
+        std::string model_path;
         std::string input_ids_name = "input_ids";
         std::string attention_mask_name = "attention_mask";
         std::string token_type_ids_name = "token_type_ids";
@@ -17,7 +19,7 @@ namespace sentencpp::inference {
 
     class OnnxEngine : public InferenceInterface {
         public:
-            OnnxEngine(const std::string& model_path, const ModelConfig& config);
+            explicit OnnxEngine(const ModelConfig& config);
 
             [[nodiscard]] std::vector<std::vector<float>> encode(const std::vector<tokenizer::Token>& tokens) override;
 

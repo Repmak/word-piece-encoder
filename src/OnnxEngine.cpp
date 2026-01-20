@@ -6,7 +6,6 @@
 namespace sentencpp::inference {
 
     OnnxEngine::OnnxEngine(
-        const std::string& model_path,
         const ModelConfig& config
     ) :
         config_(config),
@@ -19,7 +18,7 @@ namespace sentencpp::inference {
         session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
 
         // Load model.
-        session = Ort::Session(env, model_path.c_str(), session_options);
+        session = Ort::Session(env, config.model_path.c_str(), session_options);
 
         // Discover input and output names.
         Ort::AllocatorWithDefaultOptions allocator;
