@@ -12,8 +12,6 @@ namespace sentencpp::inference {
 
             // Encodes Token objects into their vector embeddings.
             [[nodiscard]] virtual std::vector<std::vector<float>> encode(const std::vector<tokenizer::Token>& tokens) = 0;
-
-            // std::vector<float> run(const std::vector<tokenizer::Token>& tokens);
     };
 
 } // namespace sentencpp::inference

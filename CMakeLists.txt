@@ -1,62 +1,78 @@
 cmake_minimum_required(VERSION 3.20)
-project(sentencpp LANGUAGES CXX)
+set(CMAKE_POLICY_DEFAULT_CMP0000 NEW)
+project(sentencpp VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Search for International Components for Unicode.
+# ICU
 find_package(ICU COMPONENTS uc i18n REQUIRED)
 
-# Path setup for onnxruntime library.
-set(ONNXRUNTIME_ROOT "${CMAKE_SOURCE_DIR}/3rd_party/onnxruntime-osx-arm64-1.23.2")
+# nlohmann_json
+include(FetchContent)
+FetchContent_Declare(
+        json
+        URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_MakeAvailable(json)
 
+# ONNX Runtime
+set(ONNXRUNTIME_ROOT "" CACHE PATH "Path to ONNX Runtime root")
+find_path(ONNXRUNTIME_INCLUDE_DIR
+        NAMES onnxruntime_cxx_api.h
+        HINTS ${ONNXRUNTIME_ROOT}
+        PATH_SUFFIXES include
+        REQUIRED
+)
+message(STATUS "LOCATED ONNXRUNTIME AT: ${ONNXRUNTIME_INCLUDE_DIR}")
 find_library(ONNXRUNTIME_LIB
-    NAMES onnxruntime
-    PATHS "${ONNXRUNTIME_ROOT}/lib"
-    NO_DEFAULT_PATH
-    REQUIRED
+        NAMES onnxruntime
+        HINTS ${ONNXRUNTIME_ROOT}
+        PATH_SUFFIXES lib
+        REQUIRED
 )
 
-add_executable(${PROJECT_NAME}
-        main.cpp
+# Wrapper for ONNX Runtime
+add_library(onnxruntime_external INTERFACE)
+target_include_directories(onnxruntime_external INTERFACE ${ONNXRUNTIME_INCLUDE_DIR})
+target_link_libraries(onnxruntime_external INTERFACE ${ONNXRUNTIME_LIB})
 
-        tokenizer/include/TokenizerInterface.h
-        tokenizer/include/VocabList.h
-        tokenizer/include/WordPiece.h
+# Library target
+add_library(sentencpp STATIC
         tokenizer/src/VocabList.cpp
         tokenizer/src/WordPiece.cpp
-#        tokenizer/src/BPE.cpp
-#        tokenizer/src/Unigram.cpp
-#        tokenizer/include/Unigram.h
-#        tokenizer/BPE.h
-
-        inference/include/InferenceInterface.h
-        inference/include/OnnxEngine.h
         inference/src/OnnxEngine.cpp
-
-        embedding_utils/include/VectorMaths.h
         embedding_utils/src/VectorMaths.cpp
-        example_usage_1.cpp
-        example_usage_2.cpp
 )
 
-# Tells the compiler where to look for include files.
-target_include_directories(${PROJECT_NAME} PRIVATE
-        tokenizer/include
-        inference/include
-        embedding_utils/include
-        ${ICU_INCLUDE_DIRS}
-        "${ONNXRUNTIME_ROOT}/include"
+target_include_directories(sentencpp
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tokenizer/include>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inference/include>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/embedding_utils/include>
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
+target_link_libraries(sentencpp
+        PUBLIC
+            nlohmann_json::nlohmann_json
+            onnxruntime_external
+        PRIVATE
+            ICU::uc
+            ICU::i18n
+)
+
+add_custom_command(TARGET sentencpp POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
         ${ONNXRUNTIME_LIB}
-        $<$<TARGET_EXISTS:ICU::uc>:ICU::uc>
-        $<$<TARGET_EXISTS:ICU::i18n>:ICU::i18n>
-        $<$<NOT:$<TARGET_EXISTS:ICU::uc>>:${ICU_LIBRARIES}>  # Fallback for older ICU versions.
+        $<TARGET_FILE_DIR:sentencpp>
+        COMMENT "Copying ONNX Runtime binary to build directory"
 )
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-        PROJECT_ROOT_PATH="${CMAKE_SOURCE_DIR}"
+target_compile_definitions(sentencpp PUBLIC
+        SENTENCPP_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
 )
+
+add_executable(example_1 examples/example_usage_1.cpp)
+
+target_link_libraries(example_1 PRIVATE sentencpp)

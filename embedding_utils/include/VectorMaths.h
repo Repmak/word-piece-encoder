@@ -24,10 +24,10 @@ namespace sentencpp::embedding_utils {
                 const std::vector<tokenizer::Token>& original_tokens
             );
 
-            // Calculates euclidean distance between two vectors.
+            // Calculates Euclidean distance between two vectors.
             static float euclidean_distance(
-                const std::vector<float>& a,
-                const std::vector<float>& b
+                const std::vector<float>& vec_a,
+                const std::vector<float>& vec_b
             );
 
             // Calculates the cosine similarity between two vectors.
@@ -36,7 +36,7 @@ namespace sentencpp::embedding_utils {
                 const std::vector<float>& vec_b
             );
 
-            // Calculates softmax for a
+            // Calculates the softmax distribution for a vector of raw scores.
             static std::vector<float> calculate_softmax(
                 const std::vector<float>& logits
             );
